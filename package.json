@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "iceStone angular boilerplate",
   "scripts": {
+    "e":"echo hellow",
     "postinstall": "bower install",
     "prestart": "npm install",
     "start": "./node_modules/.bin/hs -a localhost -p 9000 -o"
