@@ -61,7 +61,7 @@ $ bower install bootstrap --save
  + https://developers.douban.com/wiki/?title=guide
 #### API的概念：
 
-> Application Programxxx Interface
+> Application Program Interface
 
 > 应用程序编程接口
 
@@ -70,3 +70,47 @@ $ bower install bootstrap --save
  + 说白了都是函数
 - 推荐：测试webAPI的工具： POSTMAN(要翻墙)
 - 先在豆瓣api拿到静态数据设计页面结构
+#### 通过angular给我们的ajax服务请求数据 $http
+- 模版
+```
+		$http.get('data.json').then(function(data){
+			//成功
+		}).function (err) {
+			console.log(err);
+		}
+```
+- 最好写绝对路径，在执行ajax的时候angular可能已经执行完了，所以要先在函数外头写上一个空数组来装数据模型；
+```	
+		$scope.subjects = [];
+		$http.get('/app/data1.json').then(function( res ){
+			$scope.subjects = res.data.subjects;
+			console.log(res);
+		},function (err) {
+			console.log(err);
+		})
+
+```
+- 谷歌不支持file写一下的ajax请求，火狐可以
+ + 最好架在服务器上弄
+#### 获取真实数据
+- 会设计到跨域问题，那么就要用到jsonp
+ + $http.jsonp();
+- 由于XMLHTTPRequest这个对象不支持跨域请求
+- angular中将所有的jsonp的callbask挂在了angular.callbacks这个对象上面；
+ + 这么做是为了不污染全局变量 
+- 然而豆瓣的api不支持angular的方法
+- ng中要使用jsonp的方式做跨域，就要给当前地址加上参数；参数名无所谓，参数值必须是： JSON_CALLBACK
+```
+	你的地址+'?callback:JSON_CALLBACK'
+	//但是豆瓣不支持ng的这种方式，没给回调函数，而是直接给了数据
+```
+### 自己写jsonp
+- 
+
+#### jsonp的tips
+- 支持跨域的有:
+ + <img /> 可以拿，但是拿不到数据
+ + <iframe></iframe> 可以拿，但是太复杂
+ + <link rel="stylesheet" type="text/css"> 只有rel是stylesheet才能跨，而且js执行的时候会报错
+ + a标签不行
+ + 最终还是script标签适合跨域

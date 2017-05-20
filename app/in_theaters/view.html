@@ -10,11 +10,17 @@
     <h3 class="media-heading">{{item.title}}</h3>
     <p>导演：
     	<span ng-repeat="d in item.directors">
-    		{{d.name}}
-			<i ng-if='!$last'>、</i>
+    		{{d.name + ($last?'':'、')}}
+    		&nbsp;&nbsp;&nbsp;&nbsp;上映年份：
+    	<span>{{item.year}}</span>
     	</span>
     </p>
     <p>类型：{{item.genres.join('、')}}</p>
+    <p>演员：
+    	<span ng-repeat="c in item.casts">{{c.name}}{{$last?'':'、'}}</span>
+    </p>
+
+
   </div>
 </div>
   </a>

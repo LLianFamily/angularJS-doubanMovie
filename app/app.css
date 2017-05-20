@@ -107,3 +107,7 @@ body {
 .list-group .media {
 	margin-top: 0;
 }
+/* 图片样式 */
+.list-group .media-left img {
+	height: 128px;
+}
