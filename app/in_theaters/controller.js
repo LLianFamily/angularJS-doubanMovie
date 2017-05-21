@@ -18,8 +18,17 @@
 		'$scope'
 		,'httpServer'
 		, function($scope,httpServer) {
-
-	}])
+			$scope.subjects = [];
+			$scope.count = 0;
+			$scope.loading = true;
+			httpServer.jsonp('http://api.douban.com/v2/movie/in_theaters',{},function( data ){
+				$scope.subjects = data.subjects;
+				$scope.count = data.total;
+				//因为是自己写的jsonp，所以要用到$apply
+				$scope.loading = false;//mask层
+				$scope.$apply();//同步数据
+			})
+		}])
 })(angular)
 
 /*

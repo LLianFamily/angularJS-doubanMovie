@@ -105,8 +105,82 @@ $ bower install bootstrap --save
 	//但是豆瓣不支持ng的这种方式，没给回调函数，而是直接给了数据
 ```
 ### 自己写jsonp
-- 
+- 设想一下jsonp的方法需要什么参数(抽象一下)
+```
+		(function(){
+			jsonp(
+				'http://api.douban.com/v2/movie/in_theaters'
+				,{
+					count:10,
+					start:5
+				}
+				,function ( data ) {
 
+				}
+			)
+		})()
+```
+- 完整思路如下
+```
+var jsonp = function(url, data, callback) {
+
+// 		/*
+// 		挂载回调函数
+// 		将传过来的数据转换成字符串的格式
+// 		处理url中的回调
+// 		创建一个script标签
+// 		将它append到页面中
+// 		*/
+// 		// 挂载回调函数
+// 		var cbFn = 'cb_jsonp' + Math.random().toString().replace('.', '');
+// 		window[cbFn] = callback;
+// 		/*
+// 			=window.cb_jsonp1324681235 = callback
+// 			相当于给window对象附了一个方法，可以通过window全局调用
+// 		*/
+// 		// 将传过来的数据转换成字符串的格式
+// 		var query = url.indexOf('?')==-1?'?' : '&';
+// 		//判断一下有没有？ 如果传过来的url有？的话就用&代替
+// 		for (var key in data) {
+// 			query += key + '=' + data[key] + '&';
+// 			//query = ?name=1&
+// 		}
+// 		// 处理url中的回调
+// 		query += 'callback=' + cbFn;
+// 		//query = ?name=1&cb_jsonp1324681235
+
+// 		// 创建一个script标签
+// 		var scriptTag = document.createElement('script');
+// 		scriptTag.src = url + query;
+// 		//将它append到页面中
+// 		document.body.appendChild(scriptTag);
+// 		/*
+// 			代码执行到这里 script 标签会自动执行链接的地址
+// 		*/
+// 	};
+// 	window.$jsonp = jsonp;
+// 	//写在自执行函数中 ，给他暴露在全局中
+
+```
+- 但是这个时候你仍然无法绑定数据
+ + 官方文档中，如果你使用的是第三方的库调用的XHR方法，需要用到$apply通知ng重新绑定文件。
+```
+	module.controller('InTheatersContorller', [
+		'$scope'
+		,'httpServer'
+		, function($scope,httpServer) {
+			$scope.subjects = [];
+			$scope.count = 0;
+			$scope.loading = true;
+			httpServer.jsonp('http://api.douban.com/v2/movie/in_theaters',{},function( data ){
+				$scope.subjects = data.subjects;
+				$scope.count = data.total;
+				//因为是自己写的jsonp，所以要用到$apply
+				$scope.loading = false;//mask层
+				$scope.$apply();//同步数据
+			})
+		}])
+```
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据

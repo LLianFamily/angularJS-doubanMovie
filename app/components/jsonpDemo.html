@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jsonp</title>
+</head>
+<body>
+	<div id="box"></div>
+	<script src="http.js"></script>
+	<script>
+	/*设想一下jsonp的方法
+	1.需要url地址
+	2.我们给他传递的参数
+	3.拿到data后要干什么*/
+		(function(){
+			$jsonp(
+				'http://api.douban.com/v2/movie/in_theaters'
+				,{
+					count:10,
+					start:5
+				}
+				,function ( data ) {
+					document.getElementById('box').innerHTML = data;
+				}
+			)
+		})()
+	</script>
+</body>
+</html>

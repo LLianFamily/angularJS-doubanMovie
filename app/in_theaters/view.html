@@ -4,7 +4,7 @@
   	<span class="badge">{{item.rating.average}}</span>
     <div class="media">
   <div class="media-left">
-      <img class="media-object" ng-src="{{item.images.small}}" alt="item.title">
+      <img class="media-object" ng-src="{{item.images.small}}" alt="{{item.title}}">
   </div>
   <div class="media-body">
     <h3 class="media-heading">{{item.title}}</h3>
@@ -25,4 +25,11 @@
 </div>
   </a>
 
+</div>
+<p>搜索到{{count}}条数据</p>
+<div id="mask" ng-show="loading">
+  <div class="spinner">
+    <div class="dot1"></div>
+    <div class="dot2"></div>
+  </div>
 </div>
