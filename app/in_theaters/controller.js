@@ -52,7 +52,10 @@
 				参数是页码，你传进来第几页我就跳第几页
 				要用更新url地址里面的参数$route模块的updataParams()
 				*/
+				//合法化判断
+				if(page>=1&&page<=$scope.pageCount)
 				$route.updateParams({page:page});
+
 			}
 		}])
 })(angular)

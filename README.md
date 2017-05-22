@@ -213,6 +213,14 @@ $scope.paging = function( page ){
 ```
 9. 在视图中将$scope.currentPage = page; 当前页码传进去 上/下一页就-1/+1;
 10. 处理能不能点的问题
+```
+  <ul class="pager">
+    <li ng-class="{disabled:currentPage<=1}"><a ng-click="paging(currentPage-1)">上一页</a></li>
+    <li ng-class="{disabled:currentPage>=pageCount}"><a ng-click="paging(currentPage+1)">下一页</a></li>
+  </ul>
+  <!-- 直接在视图层面去进行判断就行 -->
+```
+11. 在控制器中仍然要写一个合法化判断
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据
