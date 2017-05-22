@@ -33,7 +33,7 @@
 			$scope.loading = true;
 			$scope.currentPage = page;//当前页数
 			httpServer.jsonp(
-				'http://api.douban.com/v2/movie/'+$routeParams.category
+				'https://api.douban.com/v2/movie/'+$routeParams.category
 				,{
 					start:start,
 					count:count

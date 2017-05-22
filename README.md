@@ -1,6 +1,6 @@
 # 豆瓣电影列表检索案例
 
-## step-01 构建项目结构
+##  构建项目结构
 
 - 克隆项目骨架
 
@@ -290,3 +290,6 @@ aLink === #/in_theaters/1
  + <link rel="stylesheet" type="text/css"> 只有rel是stylesheet才能跨，而且js执行的时候会报错
  + a标签不行
  + 最终还是script标签适合跨域
+#### github问题
+- 豆瓣的不是https的api，没办法在github上获取数据  蓝瘦。。
+- 
