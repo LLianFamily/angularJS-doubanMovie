@@ -199,7 +199,20 @@ var jsonp = function(url, data, callback) {
  http://api.douban.com/v2/movie/in_theaters?start=0&count=10&callback=cb_jsonp06312110770054862
 
 ```
-5. 算出你当前需要多少页 Math.ceil(获取过来的所有数据/count )
+5. 算出你当前需要多少页 Math.ceil(获取过来的所有数据/count)
+6. 先做个简单的翻页（bootstrap上找个分页样式来用）
+7. 在控制器中暴露一个行为用于翻页
+ + 参数是页码，你传进来第几页我就跳第几页
+ + 要用更新url地址里面的参数$route模块的updataParams
+8. 载入$route模块 在暴露出来的行为中调用 $route.updateParams();
+```
+$scope.paging = function( page ){
+	$route.updateParams({page:page});
+}
+
+```
+9. 在视图中将$scope.currentPage = page; 当前页码传进去 上/下一页就-1/+1;
+10. 处理能不能点的问题
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据

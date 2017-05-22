@@ -16,9 +16,10 @@
 	}]);
 	module.controller('InTheatersContorller', [
 		'$scope'
+		,'$route'
 		,'$routeParams'
 		,'httpServer'
-		, function($scope,$routeParams,httpServer) {
+		, function($scope,$route,$routeParams,httpServer) {
 			var page = parseInt($routeParams.page);//获取参数
 			var count = 10;//每页多少条
 			var start = (page-1)*count;//从哪条开始获取
@@ -30,6 +31,7 @@
 			$scope.totalCount = 0;
 			$scope.pageCount = 0;
 			$scope.loading = true;
+			$scope.currentPage = page;//当前页数
 			httpServer.jsonp('http://api.douban.com/v2/movie/in_theaters'
 				,{
 					start:start,
@@ -43,7 +45,15 @@
 				//因为是自己写的jsonp，所以要用到$apply
 				$scope.loading = false;//mask层
 				$scope.$apply();//同步数据
-			})
+			});
+			//暴露翻页行为
+			$scope.paging = function( page ){
+				/*
+				参数是页码，你传进来第几页我就跳第几页
+				要用更新url地址里面的参数$route模块的updataParams()
+				*/
+				$route.updateParams({page:page});
+			}
 		}])
 })(angular)
 

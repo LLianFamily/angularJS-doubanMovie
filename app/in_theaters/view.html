@@ -30,8 +30,8 @@
 <p ng-show="!loading">搜索到{{totalCount}}条数据,共{{pageCount}}页</p>
 	<nav>
   <ul class="pager">
-    <li><a href="#">上一页</a></li>
-    <li><a href="#">下一页</a></li>
+    <li ng-class="{disabled:currentPage<=1}"><a ng-click="paging(currentPage-1)">上一页</a></li>
+    <li ng-class="{disabled:currentPage>=pageCount}"><a ng-click="paging(currentPage+1)">下一页</a></li>
   </ul>
 </nav>
 </div>
