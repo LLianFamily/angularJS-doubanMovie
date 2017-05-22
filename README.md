@@ -223,6 +223,66 @@ $scope.paging = function( page ){
 11. 在控制器中仍然要写一个合法化判断
 12. 其他模块用的都是一样的，所以不用去另外写top250和正在热映的模块了
  + 把路由的参数改一下行了
+### 处理焦点
+- ng要尽量的避免操作dom，如果实在需要就在自定义的指令中使用link去操作
+```
+	link: function($scope, iElm, iAttrs, controller) {
+				var aLink = iElm.children().attr('href');//li的子元素a的href
+				//判断aLink的值和和当前的path值是否匹配，匹配的话就给加active样式
+				//用正则匹配path
+				// var replacePath =
+				console.log(aLink);
+				//点击切换样式
+				iElm.on('click',function(){
+					iElm.parent().children().removeClass('active');
+					iElm.addClass('active');
+				});
+			}
+```
+- iElm可以获取到你给出的指令当前在哪个dom元素上 此处完成了点击添加样式的操作
+- 页面一开始的时候当前页面的focus样式
+ + 使用$location可以获取到当前页面的path值 $location.path();
+ + 在link中 var aLink = iElm.children().attr('href'); 获取到各个li>a中的链接值
+ + 判断这两个是否相等，如果相等就添加active样式
+```
+打印出来这两个的值是这样的
+$location.path() === /top250/1
+aLink === #/in_theaters/1
+```
+- 使用正则来提取aLink的值  var pipei = aLink.replace(/#(\/.+?)\/\d+/,'$1');
+- 代码如下，记得要在app.js中载入这个模块
+```
+//焦点样式
+(function (angular) {
+	angular.module('moviecat.directives.auto-focus', [])
+	.directive('autoFocus', ['$location', function($location){
+		// 拿$location就是为了一开始的时候给选中页面添加active样式
+		var path = $location.path();//获取当前页面的path值
+		console.log(path);
+		return {
+			restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+			link: function($scope, iElm, iAttrs, controller) {
+				var aLink = iElm.children().attr('href');//li的子元素a的href
+				//判断aLink的值和和当前的path值是否匹配，匹配的话就给加active样式
+				//用正则匹配path
+				var pipei = aLink.replace(/#(\/.+?)\/\d+/,'$1');
+				// var replacePath =
+				console.log(aLink);
+				if(path.startsWith(pipei)){
+					iElm.addClass('active');
+				}
+				//点击切换样式
+				iElm.on('click',function(){
+					iElm.parent().children().removeClass('active');
+					iElm.addClass('active');
+				});
+			}
+		};
+	}]);
+})(angular)
+
+```
+
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据
