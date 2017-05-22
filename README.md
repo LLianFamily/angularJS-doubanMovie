@@ -181,6 +181,25 @@ var jsonp = function(url, data, callback) {
 			})
 		}])
 ```
+### 处理分页
+#### 需求:
+1. 每一页只展示10条信息
+2. 每个分页都要有单独的锚点
+#### 思路：
+1. 给url地址后面添加参数/:param
+2. 豆瓣给的api中 传入start（从哪开始） count (要多少条数据)
+ - start = （page-1）*count
+3. 提取url地址/后面的参数 $routeParams
+ + 注入此模块
+ + 获取到值 var x = $routeParams.param;
+ + 将需要的值都获取过来：count,start,page
+4. 在自己写的jsonp函数中传入   start和count 来链接豆瓣
+ + 通过http://localhost:9000/app/#/in_theaters/1获取到如下字段
+```
+ http://api.douban.com/v2/movie/in_theaters?start=0&count=10&callback=cb_jsonp06312110770054862
+
+```
+5. 算出你当前需要多少页 Math.ceil(获取过来的所有数据/count )
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据

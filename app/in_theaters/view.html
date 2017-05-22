@@ -1,4 +1,4 @@
-<h1 class="pages-header">正在热映</h1>
+<h1 class="pages-header">{{title}}</h1>
 <div class="list-group">
   <a href="{{item.alt}}" class="list-group-item" ng-repeat="item in subjects">
   	<span class="badge">{{item.rating.average}}</span>
@@ -26,10 +26,19 @@
   </a>
 
 </div>
-<p>搜索到{{count}}条数据</p>
+<div ng-show="!loading">
+<p ng-show="!loading">搜索到{{totalCount}}条数据,共{{pageCount}}页</p>
+	<nav>
+  <ul class="pager">
+    <li><a href="#">上一页</a></li>
+    <li><a href="#">下一页</a></li>
+  </ul>
+</nav>
+</div>
 <div id="mask" ng-show="loading">
   <div class="spinner">
     <div class="dot1"></div>
     <div class="dot2"></div>
   </div>
 </div>
+
