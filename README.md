@@ -282,6 +282,30 @@ aLink === #/in_theaters/1
 })(angular)
 
 ```
+- 小优化
+ + 让页面可以加载过后实现聚焦
+```
+			link: function($scope, iElm, iAttrs, controller) {
+
+				$scope.$location = $location//挂载到$scope
+				$scope.$watch('$location.path()',function(now){
+					var aLink = iElm.children().attr('href');//li的子元素a的href
+					//判断aLink的值和和当前的path值是否匹配，匹配的话就给加active样式
+					//用正则匹配path
+					var pipei = aLink.replace(/#(\/.+?)\/\d+/,'$1');
+					// var replacePath =
+					if(now.startsWith(pipei)){
+						iElm.parent().children().removeClass('active');
+						iElm.addClass('active');
+					}
+				})
+
+				//点击切换样式
+				// iElm.on('click',function(){
+				// 	iElm.addClass('active');
+				// });
+			}
+```
 
 #### jsonp的tips
 - 支持跨域的有:
