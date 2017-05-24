@@ -306,7 +306,72 @@ aLink === #/in_theaters/1
 				// });
 			}
 ```
+## 异步方式加载包
+- 包都在index直接引用的方式会拖累我们的页面加载，那么就要用到异步加载了
+```
+		$ bower install script.js --save 
+```
+- 用法
+```
+			$script('you want to load',function(){
 
+				})
+			$script(['包1','包2'],function(){
+
+				})			
+```
+- 包与包之间如果有依赖关系就只能一层层往里套了
+``` //外面套被引用的，回调套最小的包
+$script('jquery.js', function () {
+  $script('my-jquery-plugin.js', function () {
+    $script('my-app-that-uses-plugin.js')
+  })
+})
+```
+- angular-loader
+ + 它的作用就是帮你自动的管理包的依赖
+```
+	下载包之后直接在最开始引用这个包就ok了
+	$ bower install angular-loader --save
+	<script src="./app/bower_components/angular-loader.js"></script>
+```
+- 这类加载包非常多  script.js header.js 等  你也可以试试手写一个  类似jsonp
+ + 简单实现
+```
+	function $script( load,callback ){
+		var Ele = document.createElement('script');
+		Ele.src = load;
+		document.head.appendChild(Ele);
+		Ele.addEventListener( 'load',callback );
+	}
+```
+### 优化jsonp操作
+- 如果不再回调完成后把标签删了，页面会一直加script标签，造成缓存变大
+```
+this.jsonp = function(url, data, callback) {
+			var query = url.indexOf('?') == -1 ? '?' : '&';
+			for (var key in data) {
+				query += key + '=' + data[key] + '&';
+				//query = ?name=1&
+			}
+			var cbFn = 'cb_jsonp' + Math.random().toString().replace('.', '');
+			query += 'callback=' + cbFn;
+			var scriptTag = $document[0].createElement('script');
+			scriptTag.src = url + query;
+			$window[cbFn] = function(data) {
+				callback(data);
+				$document[0].body.removeChild(scriptTag);
+				//函数执行完后就删除
+			};
+			$document[0].body.appendChild(scriptTag);
+		};
+```
+## 搜索框功能
+
+> https://developers.douban.com/wiki/?title=movie_v2#search
+
+- 豆瓣的搜索api
+ +　/v2/movie/search?q=你要搜索的内容
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据
@@ -316,4 +381,4 @@ aLink === #/in_theaters/1
  + 最终还是script标签适合跨域
 #### github问题
 - 豆瓣的不是https的api，没办法在github上获取数据  蓝瘦。。
-- 
+
