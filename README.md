@@ -397,11 +397,68 @@ this.jsonp = function(url, data, callback) {
 		<input type="text" class="form-contrplaceholder="Search..." ng-model='input'>
 	</form>
 ```
+## 条目明细功能
+- 个人觉得直接跳到豆瓣的网址就挺好
+- 不过如果公司要做自己的模块的话能适应手机。
+- 新写一个模块：movie_detil/view.html 
+```
+(function(angular) {
+
+	var module = angular.module(
+		'moviecat.movie_detail', [
+		'ngRoute'
+		,'moviecat.server.http'
+		]);
+	module.config(['$routeProvider', function($routeProvider) {
+		$routeProvider.when('/detail/:id', {
+			templateUrl: 'movie_detail/view.html',
+			controller: 'MovieDetailContorller'
+		});
+	}]);
+	module.controller('MovieDetailContorller', [
+		'$scope'
+		,'$route'
+		,'$routeParams'
+		,'httpServer'
+		, function($scope,$route,$routeParams,httpServer) {
+			$scope.movie = {};
+			var id = $routeParams.id;
+			var apiAddress = 'http://api.douban.com/v2/movie/subject/' + id;
+			httpServer.jsonp(apiAddress,{},function ( data ) {
+				$scope.movie = data;
+				$scope.$apply();
+			});
+		}
+		}])
+})(angular)
+```
+- 至此获取到豆瓣的详细信息api数据，可以绑定到视图上了
+ + 在app.js中载入模块，要在'moviecat.movie_list'之前否则会先匹配它
+ + index视图引包
+- 绑定点击事件
+ + 到视图的a链接中 ng-href="#/detail/{{item.id}}"
+## 最后再优化一下
+- 每页个页数在此例子中是写死的
+- 豆瓣的api也是写固定的，要是以后它变了那又要改代码
+### 做成配置
+- content 定义一些永恒不变的量
+- 使用：通过此方式为模块定义一些常量
+```
+	mainModule.constant('appConfig',{
+		//页码
+		pageSize:10,
+		//豆瓣地址
+		APIAddress:'https://api.douban.com/v2/movie/',
+		//搜索地址
+		detailAPI:'https://api.douban.com/v2/movie/subject/'
+	})
+```
+- 配置完后在控制器注入
 #### jsonp的tips
 - 支持跨域的有:
- + <img /> 可以拿，但是拿不到数据
- + <iframe></iframe> 可以拿，但是太复杂
- + <link rel="stylesheet" type="text/css"> 只有rel是stylesheet才能跨，而且js执行的时候会报错
+ + img 可以拿，但是拿不到数据
+ + iframe 可以拿，但是太复杂
+ + link 只有rel是stylesheet才能跨，而且js执行的时候会报错
  + a标签不行
  + 最终还是script标签适合跨域
 #### github问题

@@ -19,9 +19,10 @@
 		,'$route'
 		,'$routeParams'
 		,'httpServer'
-		, function($scope,$route,$routeParams,httpServer) {
+		,'appConfig'
+		, function($scope,$route,$routeParams,httpServer,appConfig) {
 			var page = parseInt($routeParams.page);//获取参数
-			var count = 10;//每页多少条
+			var count = appConfig.pageSize;//每页多少条   10
 			var start = (page-1)*count;//从哪条开始获取
 			//一共需要多少页
 
@@ -33,7 +34,7 @@
 			$scope.loading = true;
 			$scope.currentPage = page;//当前页数
 			httpServer.jsonp(
-				'https://api.douban.com/v2/movie/'+$routeParams.category
+				appConfig.APIAddress+$routeParams.category
 				,{
 					start:start,
 					count:count,
