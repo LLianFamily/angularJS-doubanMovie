@@ -36,7 +36,9 @@
 				'https://api.douban.com/v2/movie/'+$routeParams.category
 				,{
 					start:start,
-					count:count
+					count:count,
+				//$routeParams的数据来源：1你自己定义了，2取?后面的参数
+					q:$routeParams.q
 				}
 				,function( data ){
 				$scope.title = data.title;

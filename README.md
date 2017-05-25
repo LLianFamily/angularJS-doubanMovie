@@ -369,9 +369,34 @@ this.jsonp = function(url, data, callback) {
 ## 搜索框功能
 
 > https://developers.douban.com/wiki/?title=movie_v2#search
+> http://api.douban.com//v2/movie/search?q=内容
 
 - 豆瓣的搜索api
- +　/v2/movie/search?q=你要搜索的内容
+ +　http://api.douban.com/v2/movie/search?q=你要搜索的内容
+ +　会发现跟其他几个模块的结构是一样的，只需要改成search
+ +　q的参数加不加都是一样的（仅该案例）
+- 思路：改变搜索地址还有？后面的参数就能实现这个功能了
+1. 给搜索框那个form标签添加一个新的控制器，在app.js中写逻辑。
+2. 在之前写的httpServer模块中添加一个参数
+ + //$routeParams的数据来源：1-你自己定义了，2-取?后面的参数
+ + q:$routeParams.q
+3. 控制器的逻辑
+```
+	mainModule.controller('searchController', ['$scope','$route', function($scope,$route){
+		$scope.input = '';//取文本框的输入
+		$scope.search = function(){
+			$route.updateParams({category: 'search',q:$scope.input})
+		}
+	}])
+```
+ + 暴露一个空文本框数据用来装输入的值
+ + 暴露一个search函数，通过$route.updateParams修改url地址的值
+4. 视图
+```
+	<form class="navbar-form navbar-rigng-controller="searchController" ng-submit="search()">
+		<input type="text" class="form-contrplaceholder="Search..." ng-model='input'>
+	</form>
+```
 #### jsonp的tips
 - 支持跨域的有:
  + <img /> 可以拿，但是拿不到数据
